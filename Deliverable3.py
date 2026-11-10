@@ -1,37 +1,29 @@
-class Character:
-    """Represents a character in the RPG"""
-    
-    def __init__(self, name: str, hp_max: int = 100, damage: int = 10) -> None:
-        """
-        Initialise the Character
-        Args:
-            name (str): The name of the character.
-            hp_max (int): Max hit points (default = 100)
-            damage (int): Damage dealt when character attacks (default = 10)
-        """
-        self.name = name
-        self._hp = hp_max  # Note: _hp indicates private attribute
-        self.hp_max = hp_max
-        self.damage = damage
 
-    def attack(self, target) -> None:
-        """Attack and deal damage to target character"""
-        target._hp -= self.damage
-        target._hp = max(target._hp, 0)  # Target hp cannot end up lower than 0
+import random
 
-    def introduce(self) -> None:
-        """Creates string that introduces character"""
-        print(f"Hi, my name is {self.name}!")
+class Dice:
+
+    def __init__(self, sides: int = 6) -> None:
+        """Initialise the dice 
+            Args: 
+            Number of sides 
+        """
+        if sides < 2: 
+            raise ValueError('Die must have at least 2 sides')
+        self.sides = sides 
+
+
+    def roll(self):
+        """ Roll method for rolling dice"""
+        dice_roll = random.randint(1, self.sides)
+        return dice_roll
 
     def __repr__(self) -> str:
-        """Representation of character object"""
-        return f"<Character name={self.name} hp={self.hp} damage={self.damage}>"
+        return f"Dice(sides = {self.sides})"
 
-    def __str__(self) -> str:
-        """String representation of character object"""
-        return f"Character: {self.name} with {self.hp} HP and {self.damage} damage"
+    def __call__(self) -> int:
+        """ Method allowing individual objects to be called like functions"""
+        return self.roll()
 
-    @property
-    def hp(self) -> int:
-        """Public read-only property to inspect HP without allowing direct, unsafe modification"""
-        return self._hp
+
+    
