@@ -1,4 +1,5 @@
 class Character:
+
     """Represents a character in the RPG"""
     
     def __init__(self, name: str, hp_max: int = 100, damage: int = 10, heal_up: int = 5, weapon: Weapon | None = None) -> None:
@@ -57,3 +58,32 @@ class Character:
     def hp(self) -> int:
         """Public read-only property to inspect HP without allowing direct, unsafe modification"""
         return self._hp
+
+
+
+class Warrior(Character):
+    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, armor: int = 5, weapon = None):
+        super().__init__(name, hp_max, damage, heal_up, weapon)
+        self.armor = armor
+
+    def take_damage(self, amount: int) -> None:
+        reduced_damage = max(amount-self.armor, 1)
+        super().take_damage(reduced_damage)
+
+
+class Mage(Character):
+    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, weapon = None, mana: int = 30, mana_max: int =30):
+        super().__init__(name, hp_max, damage, heal_up, weapon)
+        self.mana = mana 
+        self.mana_max = mana_max
+
+    def attack(self, target):
+        if self.mana >= 10:
+            self.mana -= 10
+            spell_damage = self.damage*2
+            target.take_damage(spell_damage)
+        else:
+            self.mana = min(self.mana += 5, mana_max)
+            mana = max(mana, 30)
+            super().attack(target)
+
