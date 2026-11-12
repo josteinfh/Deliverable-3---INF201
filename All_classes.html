@@ -7803,6 +7803,20 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Character class with warrior and mage subclasses</p>
+<p>Attributes for charachter class:
+name, hp_max, damage (default damage without weapon), heal_up (default healing amount), weapon</p>
+<p>Methods for character class</p>
+<p>attack(): Takes in target as argument. States that if the character has a weapon, than the target should take the damage that is associated with that weapon through self.weapon.roll_damage(). Else default damage (10)</p>
+<p>take_damage(): Takes amount as argument, intended to be supplied through the attack method. self.hp reduces by amount and sets new value to the largest value of self_hp and 0 (no negative hp.)</p>
+<p>heal(): Heals the charachter by a default value of 5 if no other amount is specified. Sets self._hp and self.hp_max to the min of these two (so hp cannot go above max).</p>
+<p>Attributes for warrior subclass:
+The same as character (inheritance), with the addition of armor</p>
+<p>Methods for warrior subclass:
+Modified take_damage(): Calculates a reduced damage due to the warriors armor. At least 1 damage taken anyway.</p>
+<p>Attributes for mage subclass:
+The same as character, with the addition of mana and mana_max</p>
+<p>Methods for mage subclass:
+Modified attack(): If the mage has 10 or more mana, double damage is dealt at the cost of 10 mana. If not, 5 mana is regenerated up to a max of 30 mana.</p>
 </div>
 </div>
 </div>
@@ -7811,10 +7825,12 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">:</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">items</span><span class="w"> </span><span class="kn">import</span> <span class="n">Weapon</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Character</span><span class="p">:</span>
 
 <span class="w">    </span><span class="sd">"""Represents a character in the RPG"""</span>
     
@@ -7850,7 +7866,7 @@ a.anchor-link {
     <span class="k">def</span><span class="w"> </span><span class="nf">take_damage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Character takes damage"""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hp</span> <span class="o">-=</span> <span class="n">amount</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hp</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hp</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># HP cannot drop below 0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">heal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Heal the character"""</span>
@@ -7899,8 +7915,8 @@ a.anchor-link {
             <span class="n">spell_damage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">damage</span><span class="o">*</span><span class="mi">2</span>
             <span class="n">target</span><span class="o">.</span><span class="n">take_damage</span><span class="p">(</span><span class="n">spell_damage</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mana</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mana</span> <span class="o">+=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">mana_max</span><span class="p">)</span>
-            <span class="n">mana</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mana</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mana</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mana</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mana_max</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mana</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mana</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -7915,6 +7931,9 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Die class</p>
+<p>Attributes: Sides (constrained to minimum 2 sides)</p>
+<p>Methods:
+roll(): Generates a random integer in range of the number of sides the die has.</p>
 </div>
 </div>
 </div>
@@ -7923,10 +7942,10 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Dice</span><span class="p">:</span>
 
@@ -7964,6 +7983,8 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Weapon class</p>
+<p>Attributes: Name of the weapon and damage_dice, a dice objekt used to determine the weapon's damage</p>
+<p>Method: Call the roll() to generate random weapon damage</p>
 </div>
 </div>
 </div>
@@ -7972,10 +7993,12 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Weapon</span><span class="p">:</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Die_class</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dice</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Weapon</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">damage_dice</span><span class="p">:</span> <span class="n">Dice</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Intialising the weapon class</span>
 <span class="sd">        2 attributes: name and damage_dice"""</span>
@@ -7999,6 +8022,12 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Battle class</p>
+<p>Attributes: Hero and Enemy</p>
+<p>Mehtod:</p>
+<p><strong>init</strong>(): initializes the battle between hero and enemy</p>
+<p>play_round(): The hero attack enemy first, if enemy is alive, it attack hero'</p>
+<p>simulate_battle(): Use a while loop to continue calling play_round untill one character reaches 0 hp</p>
+<p>Turn-based combat: The class manage turn based combat and uses is_alive property to determine when the battle should end</p>
 </div>
 </div>
 </div>
@@ -8007,10 +8036,12 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Battle</span><span class="p">():</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Charachter_class</span><span class="w"> </span><span class="kn">import</span> <span class="n">Character</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Battle</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""Create a class for battles between heros and enemies"""</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hero</span><span class="p">:</span> <span class="n">Character</span><span class="p">,</span> <span class="n">enemy</span><span class="p">:</span> <span class="n">Character</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hero</span> <span class="o">=</span> <span class="n">hero</span> 

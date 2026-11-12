@@ -13,7 +13,7 @@ class Dice:
         self.sides = sides 
 
 
-    def roll(self):
+    def roll(self) -> int:
         """ Roll method for rolling dice"""
         dice_roll = random.randint(1, self.sides)
         return dice_roll

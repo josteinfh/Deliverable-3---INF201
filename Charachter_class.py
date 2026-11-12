@@ -1,3 +1,5 @@
+from items import Weapon
+
 class Character:
 
     """Represents a character in the RPG"""
@@ -62,8 +64,8 @@ class Character:
 
 
 class Warrior(Character):
-    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, armor: int = 5, weapon = None):
-        super().__init__(name, hp_max, damage, heal_up, weapon)
+    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, armor: int = 5, weapon: Weapon | None = None):
+        super().__init__(name, hp_max, damage, heal_up, weapon = weapon)
         self.armor = armor
 
     def take_damage(self, amount: int) -> None:
@@ -72,18 +74,18 @@ class Warrior(Character):
 
 
 class Mage(Character):
-    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, weapon = None, mana: int = 30, mana_max: int =30):
-        super().__init__(name, hp_max, damage, heal_up, weapon)
+    def __init__(self, name, hp_max = 100, damage = 10, heal_up = 5, weapon: Weapon | None = None, mana: int = 30, mana_max: int =30):
+        super().__init__(name, hp_max, damage, heal_up, weapon = weapon)
         self.mana = mana 
         self.mana_max = mana_max
 
-    def attack(self, target):
+    def attack(self, target) -> None:
         if self.mana >= 10:
             self.mana -= 10
             spell_damage = self.damage*2
             target.take_damage(spell_damage)
         else:
-            self.mana = min(self.mana += 5, mana_max)
-            mana = max(mana, 30)
+            self.mana = min(self.mana + 5, self.mana_max)
+            self.mana = max(self.mana, self.mana_max)
             super().attack(target)
 
